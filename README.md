@@ -40,3 +40,14 @@ In a multiplayer environment, the warrants feature even further elevates gamepla
 The biggest trade-off I would want to consider in implementing the warrants feature is how much flexibility players have when setting a warrant. Although in real-world marketplaces companies can theoretically spend as much money as they want on advertising to reach more consumers, this may not be realistic in our stimulated marketplace. Giving players the ability to set limitless warrants would leave the feature open to abuse and too complex for users to understand exactly what placing a warrant does. Additionally, allowing users to arbitrarily set values would also make understanding how much money is tied to how much of an increase in advertisements harder. This information must be clearly communicated to players so that they are able to accurately make decisions on how they want to spend their money and how much of a risk they are undertaking.
 
 I also would want to consider the difference in implementation between single and multiplayer environments. As discussed previously, single player producers may be able to advertise to hundreds of extra people but we likely will not have that many users playing at the same time. This may drastically change how the warrants feature is implemented on the back-end and the limitations a user would have in setting a warrant on the front-end. To make it easier for players to transition between playing in single player or multiplayer, I would want to design the warrants feature for adaptability between the modes to maintain consistency and cohesiveness and avoid confusion for players.
+
+## Advertisements redesign - Figma mockup
+![Advertisements1](https://github.com/kaylieee/takehome-interview-repo/assets/50653231/b1871631-589a-4f4c-b194-6df44e0cce1c) 
+![Advertisements2](https://github.com/kaylieee/takehome-interview-repo/assets/50653231/bb2eaa69-31ce-4aaf-b4bb-ab6d525ca9e0)
+![Advertisements3](https://github.com/kaylieee/takehome-interview-repo/assets/50653231/13a7587e-2a10-4eb8-93df-25a7e737bc6a) 
+![Advertisements4](https://github.com/kaylieee/takehome-interview-repo/assets/50653231/00532fc8-750d-4832-bee6-9988afc72bc3)
+![Advertisements5](https://github.com/kaylieee/takehome-interview-repo/assets/50653231/c9f884f6-d8d8-4969-876e-c6c24f765134)
+
+
+
+
