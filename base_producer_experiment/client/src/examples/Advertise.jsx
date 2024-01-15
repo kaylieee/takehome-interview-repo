@@ -14,6 +14,8 @@ import {
     const players = usePlayers();
     const stage = useStage();
     const roundNumberText = 'round' + roundNumber;
+    const currentScore = player.get("score") || 0;
+
     //console.log('roundNumberText', roundNumberText);
     function handleChange() {
       console.log("something happened");
@@ -25,7 +27,8 @@ import {
       [player.round.get("productionQuality"),
       player.round.get("advertisementQuality"),
       player.round.get("priceOfProduct"),
-      player.round.get("productionCost")])
+      player.round.get("productionCost"),
+      player.round.get("warrantAmount")])
 
       player.stage.set("submit", true);//player.stage.submit();
     }
@@ -47,7 +50,19 @@ import {
       player.round.set("priceOfProduct", priceOfProduct);
       console.log("Saved priceOfProduct to player.round object: ", priceOfProduct);
     }
-  
+
+    function handleWarrantChoice(e){
+      player.round.set("warrantAmount", e.target.valueAsNumber)
+      console.log("Saved warrant amount to player.round object: ", e.target.valueAsNumber)
+    }
+
+    function setWarrantMax(){
+      if(currentScore >= 100){
+        return 100
+      }
+      return currentScore
+    }
+    const warrantMax = setWarrantMax()
     const isResultStage = stage.get("name") === "result";
   
     if (players.length > 1) {
@@ -82,7 +97,7 @@ import {
     return (
       <div className="md:min-w-96 lg:min-w-128 xl:min-w-192 flex flex-col items-center space-y-10">
         {}
-        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         <div>
         <h1><b>You are a producer of toothpaste.</b> </h1>
         <h1>You will now decide what to produce, how to advertise it and the price.</h1>
@@ -119,8 +134,25 @@ import {
           <PriceButton text={'$10'} on_button_click={(e) => handlePriceChoice(e, 10)}></PriceButton>
           <PriceButton text={'$15'} on_button_click={(e) => handlePriceChoice(e, 15)}></PriceButton>
           </div>
-          <ProfitMarginCalculation producerPlayer = {player}/>
+          <br/><br/><br/>
+          <h1><b>Choose how much of a warrant you want to set on your product.</b> You may spend no more than the points you currently have on a warrant.</h1>
+          <p>Adding a warrant will increase the number of buyers your product is advertised to.</p>
+          <p>The current price of a warrant is <b>$1</b> for <b>2</b> extra advertisements</p>
+          <p><strong>Note:</strong> Your warrant may be challenged by other people. <br/>If challenged, and your advertisement's claims are false, <br/>all your advertisements will be pulled and you will lose<br/> all money spent on your warrant</p>
 
+          <p>Your current choice is to set a warrant of: <b>${player.round.get("warrantAmount") || 0}</b> </p>
+          <p>Your product will be advertised to <b>{(player.round.get("warrantAmount") || 0)*2}</b> extra people </p>
+          <div>
+            <Slider
+              value={player.round.get("warrantAmount") || 0}
+              onChange={handleWarrantChoice}
+              disabled={false}
+              min={0}
+              max={warrantMax}
+            />
+          </div>
+          <ProfitMarginCalculation producerPlayer = {player}/>
+        
           <br/><br/>
             <NextRoundButton on_button_click={(e) => handleSubmit(e)}/>
             <br/>
@@ -222,7 +254,9 @@ import {
       <div>
         
         <p>You have chosen to produce <b>{producerPlayer.round.get("productionQuality")}</b> quality toothpaste and advertise it as <b>{producerPlayer.round.get("advertisementQuality")}</b> quality toothpase at a <b>price of ${producerPlayer.round.get("priceOfProduct")}</b>.</p>
-        <h1><p>This gives a <b>profit of  ${profit}</b> per product sold.</p></h1>
+        <h1><p>This gives a <b>profit of  ${profit}</b> per product sold.</p></h1><br/>
+        <p>You have chosen to set a <b>warrant of ${producerPlayer.round.get("warrantAmount") || 0}</b>.</p>
+        <p>This means your product will be advertised to <b>{(producerPlayer.round.get("warrantAmount") || 0)*2} extra people</b></p>
 
       </div>
     )

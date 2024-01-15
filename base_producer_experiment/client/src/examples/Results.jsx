@@ -13,6 +13,7 @@ export function SalesResults({roundNumber}) {
   const advertisementQuality = player.get(roundNumberText.concat("_choices"))[1]
   const priceOfProduct = player.get(roundNumberText.concat("_choices"))[2]
   const productionCost = player.get(roundNumberText.concat("_choices"))[3]
+  const warrantAmount = player.get(roundNumberText.concat("_choices"))[4] || 0
   let imageUrl = "";
   //console.log('roundNumberText', roundNumberText)
   if (advertisementQuality === "high") {
@@ -27,7 +28,7 @@ export function SalesResults({roundNumber}) {
   let points = priceOfProduct
 
   const min = 10;
-  const max = 90;
+  const max = 90 + (warrantAmount * 2);
   
   //  switch (advertisementQuality){
   //    case "high":
@@ -40,7 +41,35 @@ export function SalesResults({roundNumber}) {
 
 
   const salesCount = numBuyers * (priceOfProduct - productionCost);
-  const finalScore = currentScore + salesCount
+
+  function determineChallenge(){
+    const chance = Math.floor((1 - (0.999**max))*100)
+    const gen = Math.floor(Math.random() * 101)
+    if (warrantAmount == 0 || gen > chance){
+      console.log("not challenged")
+      return false;
+    }
+    else {
+      console.log("challenged")
+      if(productionQuality == advertisementQuality){
+        console.log("challenge passed")
+        return false;
+      }
+      console.log("challenge failed")
+      return true;
+    }
+  }
+  const challenged = determineChallenge();
+
+  function calculateFinalScore(){
+    if(challenged == true){
+      return currentScore - warrantAmount;
+    }
+    else{
+      return currentScore + salesCount;
+    }
+  }
+  const finalScore = calculateFinalScore()
 
   function handleSubmit() {
     console.log('Moving on from results round');
@@ -67,14 +96,9 @@ export function SalesResults({roundNumber}) {
         <img src={imageUrl} alt="Toothpaste Standard" width="250" height="250"/>
 
         
-        <p>
-          It was advertised to an audience of 100 users, and {numBuyers} users bought your product.
-        </p>
-        <p> 
-          You earned ${priceOfProduct - productionCost}  per product x {numBuyers} units sold = {salesCount} points in sales.
-        </p><br/>
-        <p> Your score for this round is: {salesCount} </p>
-        <p> Your total score is: {salesCount + currentScore} </p><br/>
+        <p>It was advertised to an audience of {max} users.</p><br/>
+        <FinalResult />
+        <br/>
         <p> 
           Click to proceed to the next round to sell products in this marketplace.
         </p>
@@ -84,4 +108,27 @@ export function SalesResults({roundNumber}) {
       </Button>
     </div>
   );
+
+  function FinalResult(){
+    if(challenged == true){
+      return(
+        <div>
+          <b>Your warrant was successfully challenged.</b>
+          <p>You lost <b>${warrantAmount}</b> on placing the warrant and were unable to make any sales</p><br/>
+          <p> Your score for this round is: -{warrantAmount} </p>
+          <p> Your total score is: {currentScore - warrantAmount} </p>
+        </div>
+      )
+    }
+    else{
+      return(
+        <div>
+          <p>{numBuyers} users bought your product.</p>
+          <p> You earned ${priceOfProduct - productionCost}  per product x {numBuyers} units sold = {salesCount} points in sales.</p><br/>
+          <p> Your score for this round is: {salesCount} </p>
+          <p> Your total score is: {salesCount + currentScore} </p>
+        </div>
+      )
+    }
+  }
 }
